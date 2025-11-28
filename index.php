@@ -15,7 +15,7 @@
         <h1>Lista de Usuários</h1>
         <p>Gerencie o acesso ao sistema</p>
         <p>
-        <a href="lista_estudios.php" style="color: #4CAF50; text-decoration: none; border-bottom: 1px solid #4CAF50;">
+        <a href="lista_estudios.php" style="color: #ffffffff; text-decoration: none; border-bottom: 1px solid #FFFF;" class="btn-action btn-edit">
         🏢 Gerenciar Estúdios
     </a>
 </p>
@@ -68,4 +68,5 @@
     <a href="form_usuario.php" class="btn-create">Adicionar Novo Usuário</a>
 
 </body>
+
 </html>
