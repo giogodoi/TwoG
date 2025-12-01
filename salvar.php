@@ -12,7 +12,6 @@ $pais = isset($_POST['pais']) ? $_POST['pais'] : '';
 $area = isset($_POST['area']) ? $_POST['area'] : '';
 $cargo = isset($_POST['cargo']) ? $_POST['cargo'] : '';
 
-// Recebe o ID do estúdio (se vier vazio, transformamos em NULL para o banco não reclamar de string vazia em campo INT)
 $id_estudio = !empty($_POST['id_estudio']) ? $_POST['id_estudio'] : "NULL";
 
 
@@ -38,6 +37,23 @@ else {
     $sqlBase .= " WHERE Id_Usuario=$id";
     mysqli_query($con, $sqlBase);
 
+    $sqlVerificaCliente = "SELECT * FROM Cliente WHERE Usuario_Id_Usuario = $id";
+    $sqlVerificaDesenvolvedor = "SELECT * FROM Desenvolvedor WHERE Usuario_Id_Usuario = $id";
+    
+    $isClienteAntigo = mysqli_num_rows(mysqli_query($con, $sqlVerificaCliente)) > 0;
+    $isDesenvolvedorAntigo = mysqli_num_rows(mysqli_query($con, $sqlVerificaDesenvolvedor)) > 0;
+    
+    $tipoAntigo = $isClienteAntigo ? "Cliente" : ($isDesenvolvedorAntigo ? "Desenvolvedor" : null);
+
+    if ($tipoAntigo === "Cliente" && $tipo === "Desenvolvedor") {
+        $sqlDeleteAntigo = "DELETE FROM Cliente WHERE Usuario_Id_Usuario = $id";
+        mysqli_query($con, $sqlDeleteAntigo);
+    } 
+    elseif ($tipoAntigo === "Desenvolvedor" && $tipo === "Cliente") {
+        $sqlDeleteAntigo = "DELETE FROM Desenvolvedor WHERE Usuario_Id_Usuario = $id";
+        mysqli_query($con, $sqlDeleteAntigo);
+    }
+ 
     if ($tipo == "Cliente") {
         // Usamos ON DUPLICATE KEY UPDATE para o caso de mudarmos o tipo de Dev para Cliente na edição
         $sqlFilho = "INSERT INTO Cliente (Usuario_Id_Usuario, Pais_Origem) VALUES ($id, '$pais') 
