@@ -6,7 +6,7 @@ USE sistema_usuarios;
 CREATE TABLE IF NOT EXISTS `Estudio` (
   `Id_Estudio` INT NOT NULL AUTO_INCREMENT,
   `Nome` VARCHAR(100) NOT NULL,
-  `Pais` VARCHAR(100) NULL,
+  `Pais` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`Id_Estudio`),
   UNIQUE INDEX `Nome_UNIQUE` (`Nome` ASC)
 );
@@ -48,3 +48,4 @@ CREATE TABLE IF NOT EXISTS `Desenvolvedor` (
     FOREIGN KEY (`Id_Estudio`) REFERENCES `Estudio` (`Id_Estudio`)
     ON DELETE SET NULL ON UPDATE CASCADE
 );
+
