@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS sistema_usuarios;
 CREATE DATABASE sistema_usuarios;
 USE sistema_usuarios;
 
--- 1. Tabela Estudio (Independente)
+
 CREATE TABLE IF NOT EXISTS `Estudio` (
   `Id_Estudio` INT NOT NULL AUTO_INCREMENT,
   `Nome` VARCHAR(100) NOT NULL,
@@ -24,21 +24,21 @@ CREATE TABLE IF NOT EXISTS `Usuario` (
   UNIQUE INDEX `email_UNIQUE` (`email` ASC)
 );
 
--- 3. Tabela Cliente (Filha)
+
 CREATE TABLE IF NOT EXISTS `Cliente` (
   `Usuario_Id_Usuario` INT NOT NULL,
-  `Pais_Origem` VARCHAR(100) NULL DEFAULT 'Desconhecido',
+  `Pais_Origem` VARCHAR(100) NOT NULL, 
   PRIMARY KEY (`Usuario_Id_Usuario`),
   CONSTRAINT `fk_Cliente_Usuario`
     FOREIGN KEY (`Usuario_Id_Usuario`) REFERENCES `Usuario` (`Id_Usuario`)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 4. Tabela Desenvolvedor (Filha + Ligação com Estúdio)
+
 CREATE TABLE IF NOT EXISTS `Desenvolvedor` (
   `Usuario_Id_Usuario` INT NOT NULL,
-  `Area` VARCHAR(100) NULL,
-  `Cargo` VARCHAR(100) NULL,
+  `Area` VARCHAR(100) NOT NULL, 
+  `Cargo` VARCHAR(100) NOT NULL, 
   `Id_Estudio` INT NULL,
   PRIMARY KEY (`Usuario_Id_Usuario`),
   CONSTRAINT `fk_Desenvolvedor_Usuario`
