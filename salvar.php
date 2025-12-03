@@ -1,6 +1,7 @@
 <?php
 include("config.php");
 
+
 $id = $_POST['id'];
 $nome = $_POST['nome'];
 $email = $_POST['email'];
@@ -12,11 +13,26 @@ $pais = isset($_POST['pais']) ? $_POST['pais'] : '';
 $area = isset($_POST['area']) ? $_POST['area'] : '';
 $cargo = isset($_POST['cargo']) ? $_POST['cargo'] : '';
 
+
 $id_estudio = !empty($_POST['id_estudio']) ? $_POST['id_estudio'] : "NULL";
+
+
+if ($tipo == "Cliente" && empty($pais)) {
+    die("Erro: O 'País de Origem' é obrigatório para Clientes. <a href='javascript:history.back()'>Voltar</a>");
+}
+
+if ($tipo == "Desenvolvedor" && empty($area)) {
+    die("Erro: A 'Área de Atuação' é obrigatória para Desenvolvedores. <a href='javascript:history.back()'>Voltar</a>");
+}
+
+if ($tipo == "Desenvolvedor" && empty($cargo)) {
+    die("Erro: O 'Cargo' é obrigatório para Desenvolvedores. <a href='javascript:history.back()'>Voltar</a>");
+}
 
 
 
 if ($id == "") {
+
     $sqlUsuario = "INSERT INTO Usuario (nome, email, senha) VALUES ('$nome', '$email', '$senha')";
     
     if (mysqli_query($con, $sqlUsuario)) {
@@ -32,10 +48,13 @@ if ($id == "") {
 } 
 
 else {
+
     $sqlBase = "UPDATE Usuario SET nome='$nome', email='$email'";
     if ($senha != "") { $sqlBase .= ", senha='$senha'"; }
     $sqlBase .= " WHERE Id_Usuario=$id";
     mysqli_query($con, $sqlBase);
+
+
 
     $sqlVerificaCliente = "SELECT * FROM Cliente WHERE Usuario_Id_Usuario = $id";
     $sqlVerificaDesenvolvedor = "SELECT * FROM Desenvolvedor WHERE Usuario_Id_Usuario = $id";
@@ -43,6 +62,7 @@ else {
     $isClienteAntigo = mysqli_num_rows(mysqli_query($con, $sqlVerificaCliente)) > 0;
     $isDesenvolvedorAntigo = mysqli_num_rows(mysqli_query($con, $sqlVerificaDesenvolvedor)) > 0;
     
+
     $tipoAntigo = $isClienteAntigo ? "Cliente" : ($isDesenvolvedorAntigo ? "Desenvolvedor" : null);
 
     if ($tipoAntigo === "Cliente" && $tipo === "Desenvolvedor") {
@@ -53,9 +73,8 @@ else {
         $sqlDeleteAntigo = "DELETE FROM Desenvolvedor WHERE Usuario_Id_Usuario = $id";
         mysqli_query($con, $sqlDeleteAntigo);
     }
- 
+    
     if ($tipo == "Cliente") {
-        // Usamos ON DUPLICATE KEY UPDATE para o caso de mudarmos o tipo de Dev para Cliente na edição
         $sqlFilho = "INSERT INTO Cliente (Usuario_Id_Usuario, Pais_Origem) VALUES ($id, '$pais') 
                      ON DUPLICATE KEY UPDATE Pais_Origem='$pais'";
     } else {
