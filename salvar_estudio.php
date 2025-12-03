@@ -5,6 +5,9 @@ $id = $_POST['id'];
 $nome = $_POST['nome'];
 $pais = $_POST['pais'];
 
+if (empty($pais)) {
+    die("Erro: O 'País' é obrigatório. <a href='javascript:history.back()'>Voltar</a>");
+}
 
 if ($id == "") {
 
