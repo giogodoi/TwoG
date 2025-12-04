@@ -2,7 +2,7 @@
 $host = "127.0.0.1";
 $user = "root";
 $pass = ""; 
-$bd   = "sistema_usuarios";
+$bd   = "mydb";
 
 
 $con = mysqli_connect($host, $user, $pass, $bd);
