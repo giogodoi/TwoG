@@ -1,13 +1,11 @@
 <?php
 include("config.php");
 
-
 $id = $_POST['id'];
 $nome = $_POST['nome'];
 $email = $_POST['email'];
 $senha = $_POST['senha'];
 $tipo = $_POST['tipo'];
-
 
 $pais = isset($_POST['pais']) ? $_POST['pais'] : '';
 $area = isset($_POST['area']) ? $_POST['area'] : '';
@@ -15,7 +13,6 @@ $cargo = isset($_POST['cargo']) ? $_POST['cargo'] : '';
 
 
 $id_estudio = !empty($_POST['id_estudio']) ? $_POST['id_estudio'] : "NULL";
-
 
 if ($tipo == "Cliente" && empty($pais)) {
     die("Erro: O 'País de Origem' é obrigatório para Clientes. <a href='javascript:history.back()'>Voltar</a>");
@@ -29,8 +26,6 @@ if ($tipo == "Desenvolvedor" && empty($cargo)) {
     die("Erro: O 'Cargo' é obrigatório para Desenvolvedores. <a href='javascript:history.back()'>Voltar</a>");
 }
 
-
-
 if ($id == "") {
 
     $sqlUsuario = "INSERT INTO Usuario (nome, email, senha) VALUES ('$nome', '$email', '$senha')";
@@ -41,7 +36,7 @@ if ($id == "") {
         if ($tipo == "Cliente") {
             $sqlFilho = "INSERT INTO Cliente (Usuario_Id_Usuario, Pais_Origem) VALUES ($ultimo_id, '$pais')";
         } else {
-            $sqlFilho = "INSERT INTO Desenvolvedor (Usuario_Id_Usuario, Area, Cargo, Id_Estudio) VALUES ($ultimo_id, '$area', '$cargo', $id_estudio)";
+            $sqlFilho = "INSERT INTO Desenvolvedor (Usuario_Id_Usuario, Area, Cargo, Estudio_Id_Estudio) VALUES ($ultimo_id, '$area', '$cargo', $id_estudio)";
         }
         mysqli_query($con, $sqlFilho);
     }
@@ -55,14 +50,12 @@ else {
     mysqli_query($con, $sqlBase);
 
 
-
     $sqlVerificaCliente = "SELECT * FROM Cliente WHERE Usuario_Id_Usuario = $id";
     $sqlVerificaDesenvolvedor = "SELECT * FROM Desenvolvedor WHERE Usuario_Id_Usuario = $id";
     
     $isClienteAntigo = mysqli_num_rows(mysqli_query($con, $sqlVerificaCliente)) > 0;
     $isDesenvolvedorAntigo = mysqli_num_rows(mysqli_query($con, $sqlVerificaDesenvolvedor)) > 0;
     
-
     $tipoAntigo = $isClienteAntigo ? "Cliente" : ($isDesenvolvedorAntigo ? "Desenvolvedor" : null);
 
     if ($tipoAntigo === "Cliente" && $tipo === "Desenvolvedor") {
@@ -78,8 +71,8 @@ else {
         $sqlFilho = "INSERT INTO Cliente (Usuario_Id_Usuario, Pais_Origem) VALUES ($id, '$pais') 
                      ON DUPLICATE KEY UPDATE Pais_Origem='$pais'";
     } else {
-        $sqlFilho = "INSERT INTO Desenvolvedor (Usuario_Id_Usuario, Area, Cargo, Id_Estudio) VALUES ($id, '$area', '$cargo', $id_estudio) 
-                     ON DUPLICATE KEY UPDATE Area='$area', Cargo='$cargo', Id_Estudio=$id_estudio";
+        $sqlFilho = "INSERT INTO Desenvolvedor (Usuario_Id_Usuario, Area, Cargo, Estudio_Id_Estudio) VALUES ($id, '$area', '$cargo', $id_estudio) 
+                     ON DUPLICATE KEY UPDATE Area='$area', Cargo='$cargo', Estudio_Id_Estudio=$id_estudio";
     }
     mysqli_query($con, $sqlFilho);
 }
