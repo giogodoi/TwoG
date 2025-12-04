@@ -22,11 +22,11 @@
     <?php
     include("config.php");
     
-
     $id = ""; $nome = ""; $email = "";
     $tipo = "Cliente"; 
     $pais = ""; $area = ""; $cargo = ""; $id_estudio_selecionado = "";
     
+    // Busca estúdios para preencher o select
     $queryEstudios = "SELECT * FROM Estudio ORDER BY Nome";
     $resultEstudios = mysqli_query($con, $queryEstudios);
 
@@ -48,7 +48,8 @@
             $tipo = "Desenvolvedor";
             $area = $row['Area'];
             $cargo = $row['Cargo'];
-            $id_estudio_selecionado = $row['Id_Estudio']; 
+            // ATENÇÃO: O nome da coluna no banco novo é Estudio_Id_Estudio
+            $id_estudio_selecionado = $row['Estudio_Id_Estudio']; 
         }
         
         if(isset($row)) {
@@ -97,7 +98,7 @@
             <select name="id_estudio">
                 <option value="">Selecione um Estúdio...</option>
                 <?php
-                if (mysqli_num_rows($resultEstudios) > 0) {
+                if ($resultEstudios && mysqli_num_rows($resultEstudios) > 0) {
                     mysqli_data_seek($resultEstudios, 0); 
                     while($estudio = mysqli_fetch_assoc($resultEstudios)) {
                         $selected = ($estudio['Id_Estudio'] == $id_estudio_selecionado) ? "selected" : "";
